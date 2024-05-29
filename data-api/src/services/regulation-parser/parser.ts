@@ -1,15 +1,15 @@
 import Source from './source/source';
-import ParserStrategy from './parser-strategy/parser-strategy';
+import NormalyzerStrategy from './normalyzer/strategy';
 
 export default class Parser {
     constructor(
         private source: Source,
-        private parserStrategy: ParserStrategy
+        private normalyzerStrategy: NormalyzerStrategy
     ) {}
 
     public parse(inputData: string) {
         const plainData = this.source.getPlainData(inputData);
 
-        return this.parserStrategy.getParsedData(plainData);
+        return this.normalyzerStrategy.getNormalyzedData(plainData);
     }
 }

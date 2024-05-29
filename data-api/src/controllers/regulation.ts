@@ -17,7 +17,7 @@ router.get('/get-regulation', async (req: Request<GetRegulationQuery>, res: Resp
     try {
         const sourceUrl = req.query.sourceUrl;
 
-        // @TODO: OpenAPI annotations could be leveraged instead as a smarter validation and responses typing approach
+        // @TODO: OpenAPI annotations could be leveraged instead - as a smarter validation and responses typing approach
         if (!sourceUrl) {
             res
                 .status(400)
@@ -38,6 +38,8 @@ router.get('/get-regulation', async (req: Request<GetRegulationQuery>, res: Resp
                 regulationDocument,
             });
     } catch (e) {
+        console.log(e);
+
         res
             .status(500)
             .json({

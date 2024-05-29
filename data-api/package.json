@@ -4,7 +4,7 @@
   "description": "Data API for Mancomm Regulation Data App",
   "license": "MIT",
   "scripts": {
-    "start": "ts-node src/main.ts",
+    "start": "node --max_old_space_size=8192 -r ts-node/register src/main.ts",
     "build": "tsc",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix"
