@@ -1,5 +1,7 @@
+*/dist
 */node_modules
 */.cache
 */nohup.out
 */yarn-error.log
+*/.serverless
 mongo-data

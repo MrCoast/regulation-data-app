@@ -3,3 +3,5 @@ docker-compose.yml
 README.md
 */Dockerfile*
 */yarn-error.log
+*/node_modules
+*/dist

@@ -5,6 +5,11 @@ import { PlainObject } from '../parser';
 const DOM_NODE_ELEMENT = 1;
 const DOM_NODE_TEXT = 3;
 
+// Node object returned by Cheerio uses "data" property instead of "textContent"
+type CheerioHTMLElement = HTMLElement & {
+    data: string;
+};
+
 export default class HtmlStringSource extends Source {
     public getPlainData(inputData: string): object {
         // Cheerio works with the whole HTML document in memory, --max_old_space_size=2048 set in package.json
@@ -14,10 +19,10 @@ export default class HtmlStringSource extends Source {
         const $ = cheerio.load(inputData);
         const htmlBody = $('body').get(0);
 
-        return this.convertNodeToPlainObject(htmlBody);
+        return this.convertNodeToPlainObject(htmlBody! as unknown as CheerioHTMLElement);
     }
 
-    private convertNodeToPlainObject(node: HTMLElement) {
+    private convertNodeToPlainObject(node: CheerioHTMLElement) {
         const plainObject: PlainObject = {};
       
         switch (node.nodeType) {
@@ -29,13 +34,12 @@ export default class HtmlStringSource extends Source {
                 }
                 plainObject.children = [];
                 for (const child of node.childNodes) {
-                    plainObject.children.push(this.convertNodeToPlainObject(child as HTMLElement));
+                    plainObject.children.push(this.convertNodeToPlainObject(child as CheerioHTMLElement));
                 }
                 break;
-          case DOM_NODE_TEXT:
-              // node object returned by Cheerio uses "data" property instead of "textContent"
-              plainObject.textContent = (node as any).data.trim();
-              break;
+            case DOM_NODE_TEXT:
+                plainObject.textContent = node.data.trim();
+                break;
         }
       
         return plainObject;

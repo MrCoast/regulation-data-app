@@ -1,5 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import serverless from 'serverless-http';
 import regulationController from './controllers/regulation';
 
 const PORT = process.env.PORT || 3000;
@@ -15,3 +16,5 @@ app.use('/regulation', regulationController);
 (async () => {
     await mongoose.connect(DB_CONNECTION_STRING);
 })();
+
+export const handler = serverless(app);

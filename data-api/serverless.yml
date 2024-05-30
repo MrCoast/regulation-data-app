@@ -1,0 +1,13 @@
+org: victorkaralkin
+service: mancomm-data-api
+provider:
+  name: aws
+  runtime: nodejs20.x
+  stage: prod
+functions:
+  api:
+    handler: dist/main.handler
+    memorySize: 2048
+    events:
+      - http: ANY /
+      - http: ANY /{proxy+}
