@@ -38,7 +38,7 @@ router.get('/get-regulation', async (req: Request<GetRegulationQuery>, res: Resp
                 regulationDocument,
             });
     } catch (e) {
-        console.log(e);
+        console.error(e);
 
         res
             .status(500)

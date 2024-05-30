@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import RegulationParser from './regulation-parser/parser';
 import HtmlStringSource from './regulation-parser/source/html-string-source';
-import NormalyzerStrategyEcfr from './regulation-parser/normalyzer/ecfr';
+import EcfrNormalyzer from './regulation-parser/normalyzer/ecfr';
 
 export async function getRegulationDocumentFromUrl(url: string) {
     const webPageHtmlResponse = await fetch(url);
@@ -13,7 +13,7 @@ export async function getRegulationDocumentFromUrl(url: string) {
 
     const regulationParser = new RegulationParser(
         new HtmlStringSource(),
-        new NormalyzerStrategyEcfr()
+        new EcfrNormalyzer()
     );
 
     return regulationParser.parse(webPageHtml);

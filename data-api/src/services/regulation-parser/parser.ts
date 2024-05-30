@@ -1,6 +1,13 @@
 import Source from './source/source';
 import NormalyzerStrategy from './normalyzer/strategy';
 
+export type PlainObject = {
+    tagName?: string;
+    attributes?: { [key: string]: string };
+    children?: Array<PlainObject>;
+    textContent?: string;
+};
+
 export default class Parser {
     constructor(
         private source: Source,
