@@ -175,6 +175,8 @@ export default class EcfrNormalyzer extends NormalyzerStrategy {
             const innerPlainParagraphs = this.filterByIdRegex(plainParagraph.children!, /^p-/);
             processedParagraph.paragraphs = this
                 .processParagraphs(innerPlainParagraphs)
+                // Store nested paragraphs as strings instead of nested objects
+                // to prevent circular references in the Mongoose model
                 .map((innerParagraph) => JSON.stringify(innerParagraph));
 
             processedParagraphs.push(processedParagraph);
