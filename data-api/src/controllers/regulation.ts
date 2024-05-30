@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import * as regulationService from '../services/regulation';
+import * as regulationDocumentMapper from '../mappers/regulation-document';
 
 const router = express.Router();
 
@@ -25,11 +26,48 @@ router.get('/get-regulation', async (req: Request<GetRegulationQuery>, res: Resp
                     status: 'error',
                     error: 'sourceUrl parameter is required',
                 });
-    
+
             return;
         }
 
         const regulationDocument = await regulationService.getRegulationDocumentFromUrl(sourceUrl as string);
+
+        res
+            .status(200)
+            .json({
+                status: 'ok',
+                regulationDocument,
+            });
+    } catch (e) {
+        console.error(e);
+
+        res
+            .status(500)
+            .json({
+                status: 'error',
+                error: e,
+            });
+    }
+});
+
+router.get('/save-regulation', async (req: Request<GetRegulationQuery>, res: Response) => {
+    try {
+        const sourceUrl = req.query.sourceUrl;
+
+        if (!sourceUrl) {
+            res
+                .status(400)
+                .json({
+                    status: 'error',
+                    error: 'sourceUrl parameter is required',
+                });
+
+            return;
+        }
+
+        const regulationDocument = await regulationService.getRegulationDocumentFromUrl(sourceUrl as string);
+        const regulationDocumentModel = regulationDocumentMapper.createModelFromDto(regulationDocument);
+        await regulationDocumentModel.save();
 
         res
             .status(200)

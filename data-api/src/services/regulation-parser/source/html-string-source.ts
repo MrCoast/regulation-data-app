@@ -7,7 +7,7 @@ const DOM_NODE_TEXT = 3;
 
 export default class HtmlStringSource extends Source {
     public getPlainData(inputData: string): object {
-        // Cheerio works with the whole HTML document in memory, --max_old_space_size=1536 set in package.json
+        // Cheerio works with the whole HTML document in memory, --max_old_space_size=2048 set in package.json
         // This is much more effecient than JSDOM.
         // For larger documents another approaches might be considered:
         // e.g. using stream parsing libraries like https://www.npmjs.com/package/sax or https://www.npmjs.com/package/htmlparser2

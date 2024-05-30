@@ -173,7 +173,9 @@ export default class EcfrNormalyzer extends NormalyzerStrategy {
             processedParagraph.content = this.extractPlainText(plainParagraph);
 
             const innerPlainParagraphs = this.filterByIdRegex(plainParagraph.children!, /^p-/);
-            processedParagraph.paragraphs = this.processParagraphs(innerPlainParagraphs);
+            processedParagraph.paragraphs = this
+                .processParagraphs(innerPlainParagraphs)
+                .map((innerParagraph) => JSON.stringify(innerParagraph));
 
             processedParagraphs.push(processedParagraph);
         }

@@ -47,5 +47,5 @@ export class Section {
 export class Paragraph {
     public id?: string;
     public content?: string;
-    public paragraphs?: Array<Paragraph>;
+    public paragraphs?: Array<string>;
 }
