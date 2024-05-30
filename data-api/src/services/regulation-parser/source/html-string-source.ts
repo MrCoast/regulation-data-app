@@ -1,20 +1,19 @@
-import jsdom from 'jsdom';
+import * as cheerio from 'cheerio';
 import Source from './source';
 import { PlainObject } from '../parser';
-
-const { JSDOM } = jsdom;
 
 const DOM_NODE_ELEMENT = 1;
 const DOM_NODE_TEXT = 3;
 export default class HtmlStringSource extends Source {
     public getPlainData(inputData: string): object {
-        // JSDOM loads the whole HTML document in memory, currently it works with --max_old_space_size=8192 set in package.json
-        // for larger documents another approaches might be considered:
-        // e.g. stream parsing with sax library - https://www.npmjs.com/package/sax
-        const webPageDom = new JSDOM(inputData);
-        const document = webPageDom.window.document;
+        // Cheerio works with the whole HTML document in memory, --max_old_space_size=1536 set in package.json
+        // This is much more effecient than JSDOM.
+        // For larger documents another approaches might be considered:
+        // e.g. using stream parsing libraries like https://www.npmjs.com/package/sax or https://www.npmjs.com/package/htmlparser2
+        const $ = cheerio.load(inputData);
+        const htmlBody = $('body').get(0);
 
-        return this.convertNodeToPlainObject(document.body);
+        return this.convertNodeToPlainObject(htmlBody);
     }
 
     private convertNodeToPlainObject(node: HTMLElement) {
@@ -33,7 +32,8 @@ export default class HtmlStringSource extends Source {
             }
             break;
           case DOM_NODE_TEXT:
-            plainObject.textContent = node.textContent!.trim();
+            // node object returned by Cheerio uses "data" property instead of "textContent"
+            plainObject.textContent = (node as any).data.trim();
             break;
         }
       
