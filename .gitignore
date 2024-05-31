@@ -1,3 +1,4 @@
+*/.env
 */dist
 */node_modules
 */.cache
@@ -5,3 +6,4 @@
 */yarn-error.log
 */.serverless
 mongo-data
+docker-compose.override.yml

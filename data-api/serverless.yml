@@ -2,12 +2,23 @@ org: victorkaralkin
 service: mancomm-data-api
 provider:
   name: aws
+  region: us-west-2
   runtime: nodejs20.x
   stage: prod
 functions:
   api:
     handler: dist/main.handler
     memorySize: 2048
+    timeout: 30
     events:
       - http: ANY /
       - http: ANY /{proxy+}
+    environment:
+      # @TODO: Normally this should be populated from CI/CD secrets, env variables or a KMS service
+      DB_CONNECTION_STRING: mongodb://mancommdataapi:WB4RaHVRmpMTeKK@mancomm-728682967665.us-west-2.docdb-elastic.amazonaws.com:27017?tls=true&retryWrites=false
+    vpc:
+      securityGroupIds:
+        - sg-a8c330cd
+      subnetIds:
+        - subnet-2aa0ac5e
+        - subnet-8e6e82eb

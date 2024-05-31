@@ -30,13 +30,48 @@ router.get('/get-regulation', async (req: Request<GetRegulationQuery>, res: Resp
             return;
         }
 
-        const regulationDocument = await regulationService.getRegulationDocumentFromUrl(sourceUrl as string);
+        const regulationDocument = await regulationService.getCachedRegulationDocument(sourceUrl as string);
 
         res
             .status(200)
             .json({
                 status: 'ok',
                 regulationDocument,
+            });
+    } catch (e) {
+        console.error(e);
+
+        res
+            .status(500)
+            .json({
+                status: 'error',
+                error: e,
+            });
+    }
+});
+
+router.get('/preload-regulation', async (req: Request<GetRegulationQuery>, res: Response) => {
+    try {
+        const sourceUrl = req.query.sourceUrl;
+
+        if (!sourceUrl) {
+            res
+                .status(400)
+                .json({
+                    status: 'error',
+                    error: 'sourceUrl parameter is required',
+                });
+
+            return;
+        }
+
+        await regulationService.getCachedRegulationData(sourceUrl as string);
+
+        res
+            .status(200)
+            .json({
+                status: 'ok',
+                operation: 'preload',
             });
     } catch (e) {
         console.error(e);
@@ -65,7 +100,7 @@ router.get('/save-regulation', async (req: Request<GetRegulationQuery>, res: Res
             return;
         }
 
-        const regulationDocument = await regulationService.getRegulationDocumentFromUrl(sourceUrl as string);
+        const regulationDocument = await regulationService.getCachedRegulationDocument(sourceUrl as string);
         const regulationDocumentModel = regulationDocumentMapper.createModelFromDto(regulationDocument);
         await regulationDocumentModel.save();
 
@@ -73,7 +108,7 @@ router.get('/save-regulation', async (req: Request<GetRegulationQuery>, res: Res
             .status(200)
             .json({
                 status: 'ok',
-                regulationDocument,
+                operation: 'write',
             });
     } catch (e) {
         console.error(e);
