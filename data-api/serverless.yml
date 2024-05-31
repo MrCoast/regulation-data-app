@@ -9,6 +9,7 @@ functions:
   api:
     handler: dist/main.handler
     memorySize: 2048
+    ephemeralStorageSize: 1024 # this is used to cache downloaded html documents
     timeout: 30
     events:
       - http: ANY /
