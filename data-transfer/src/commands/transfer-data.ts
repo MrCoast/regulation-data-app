@@ -40,8 +40,16 @@ export default class TransferDocumentsCommand {
         for (const document of sourceDocuments) {
             const jsonDocumentString = JSON.stringify(document);
 
-            await this.writeDocumentToTarget(getS3KeyByUrl(document.source), jsonDocumentString);
+            console.info(`Writing document: source = ${document.source}`);
+
+            try {
+                await this.writeDocumentToTarget(getS3KeyByUrl(document.source), jsonDocumentString);
+            } catch (e) {
+                console.error(`Error when writing document: source = ${document.source}`);
+            }
         }
+
+        console.info(`Writing documents completed`);
     }
 
     private async writeDocumentToTarget(documentKey: string, jsonDocumentString: string) {
