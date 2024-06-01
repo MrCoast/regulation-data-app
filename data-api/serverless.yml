@@ -15,10 +15,7 @@ functions:
       - http: ANY /
       - http: ANY /{proxy+}
     environment:
-      # @TODO: Normally this should be populated from CI/CD secrets, env variables or a KMS service
-      # Also the db host name / connection string might be taken as a CloudFormation resource output
-      # if the db is declared as a custom CloudFormation resource, which is possible with the Serverless framework
-      DB_CONNECTION_STRING: mongodb://mancommdataapi:<secret>@mancomm-728682967665.us-west-2.docdb-elastic.amazonaws.com:27017/regulation?tls=true&retryWrites=false
+      DB_CONNECTION_STRING: ${env:DB_CONNECTION_STRING}
     vpc:
       securityGroupIds:
         - sg-a8c330cd

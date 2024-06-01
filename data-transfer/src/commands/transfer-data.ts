@@ -7,6 +7,8 @@ type TransferOptions = {
     sourceCollectionName: string;
     limit: number;
     awsRegion: string;
+    awsAccessKeyId: string;
+    awsSecretAccessKey: string;
     awsS3Bucket: string;
 };
 
@@ -31,6 +33,9 @@ export default class TransferDocumentsCommand {
 
         return mongoose.connection.db.collection(this.options.sourceCollectionName)
             .find(filter).sort({ createdAt: 1 })
+            // @TODO: Add a filter by createdAt >= timestamp of the latest modification made in the S3 bucket
+            // (which can be taken using aws-sdk library)
+            // So only the new documents are selected for transfer
             .limit(this.options.limit)
             .toArray() as unknown as Promise<LeanDocument[]>;
     }
@@ -44,7 +49,7 @@ export default class TransferDocumentsCommand {
             try {
                 await this.writeDocumentToTarget(getS3KeyByUrl(document.source), jsonDocumentString);
             } catch (e) {
-                console.error(`Error when writing document: source = ${document.source}`);
+                console.error(`Error when writing document: source = ${document.source}`, e);
             }
         }
 
@@ -52,7 +57,9 @@ export default class TransferDocumentsCommand {
     }
 
     private async writeDocumentToTarget(documentKey: string, jsonDocumentString: string) {
-        const s3Client = S3Client.getInstance(this.options.awsRegion).getClient();
+        const s3Client = S3Client
+            .getInstance(this.options.awsRegion, this.options.awsAccessKeyId, this.options.awsSecretAccessKey)
+            .getClient();
 
         const params: PutObjectRequest = {
             Bucket: this.options.awsS3Bucket,

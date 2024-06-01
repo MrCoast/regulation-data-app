@@ -6,14 +6,24 @@ provider:
   runtime: nodejs20.x
   stage: prod
 functions:
-  api:
+  job:
     handler: dist/main.handler
-    memorySize: 2048
+    memorySize: 1024
     ephemeralStorageSize: 1024 # this is used for temp files storage
     timeout: 300 # this function isn't bound to API Gateway, so we could allow larger timeouts
+    events:
+      - schedule:
+          name: run-transfer-job
+          description: Run a periodic documents transfer from DocumentDB into S3
+          rate: rate(15 minutes)
     environment:
-      # @TODO: Normally this should be populated from CI/CD secrets, env variables or a KMS service
-      DB_CONNECTION_STRING: mongodb://mancommdataapi:WB4RaHVRmpMTeKK@mancomm-728682967665.us-west-2.docdb-elastic.amazonaws.com:27017/regulation?tls=true&retryWrites=false
+      # Lambda prevents using some reserver variable names, so use APP_* prefix for them
+      APP_AWS_ACCESS_KEY_ID: ${env:AWS_ACCESS_KEY_ID}
+      APP_AWS_SECRET_ACCESS_KEY: ${env:AWS_SECRET_ACCESS_KEY}
+      APP_AWS_REGION: ${env:AWS_REGION}
+      AWS_S3_BUCKET: ${env:AWS_S3_BUCKET}
+      DB_COLLECTION_NAME: ${env:DB_COLLECTION_NAME}
+      DB_CONNECTION_STRING: ${env:DB_CONNECTION_STRING}
     vpc:
       securityGroupIds:
         - sg-a8c330cd
