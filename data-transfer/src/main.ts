@@ -14,13 +14,18 @@ if (!AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY || !AWS_REGION) {
 }
 
 (async () => {
-    await mongoose.connect(DB_CONNECTION_STRING);
+    try {
+        await mongoose.connect(DB_CONNECTION_STRING);
 
-    const transferDocumentsCommand = new TransferDocumentsCommand({
-        limit: DOCUMENTS_TRANSFER_LIMIT,
-        awsRegion: AWS_REGION,
-        awsS3Bucket: AWS_S3_BUCKET,
-    });
+        const transferDocumentsCommand = new TransferDocumentsCommand({
+            limit: DOCUMENTS_TRANSFER_LIMIT,
+            awsRegion: AWS_REGION,
+            awsS3Bucket: AWS_S3_BUCKET,
+        });
 
-    await transferDocumentsCommand.execute();
+        await transferDocumentsCommand.execute();
+
+    } finally {
+        await mongoose.connection.close();
+    }
 })();
