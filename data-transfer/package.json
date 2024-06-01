@@ -12,6 +12,7 @@
   "keywords": [],
   "dependencies": {
     "@types/node": "^20.12.12",
+    "aws-sdk": "^2.1632.0",
     "dotenv": "^16.4.5",
     "mongoose": "^8.4.0"
   },
