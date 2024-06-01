@@ -16,7 +16,7 @@ interface GetRegulationQuery {
 
 router.get('/preload', async (req: Request<GetRegulationQuery>, res: Response) => {
     try {
-        const sourceUrl = req.query.sourceUrl;
+        const sourceUrl = req.query.sourceUrl as string;
 
         if (!sourceUrl) {
             res
@@ -29,7 +29,7 @@ router.get('/preload', async (req: Request<GetRegulationQuery>, res: Response) =
             return;
         }
 
-        await regulationService.getCachedRegulationData(sourceUrl as string);
+        await regulationService.getCachedRegulationData(sourceUrl);
 
         res
             .status(200)
@@ -51,7 +51,7 @@ router.get('/preload', async (req: Request<GetRegulationQuery>, res: Response) =
 
 router.get('/save', async (req: Request<GetRegulationQuery>, res: Response) => {
     try {
-        const sourceUrl = req.query.sourceUrl;
+        const sourceUrl = req.query.sourceUrl as string;
 
         if (!sourceUrl) {
             res
@@ -64,7 +64,9 @@ router.get('/save', async (req: Request<GetRegulationQuery>, res: Response) => {
             return;
         }
 
-        const regulationDocument = await regulationService.getCachedRegulationDocument(sourceUrl as string);
+        const regulationDocument = await regulationService.getCachedRegulationDocument(sourceUrl);
+        regulationDocument.source = sourceUrl;
+
         const regulationDocumentModel = regulationDocumentMapper.createModelFromDto(regulationDocument);
         await regulationDocumentModel.save();
 

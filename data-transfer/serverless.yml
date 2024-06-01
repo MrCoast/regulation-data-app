@@ -1,0 +1,22 @@
+org: victorkaralkin
+service: mancomm-data-transfer
+provider:
+  name: aws
+  region: us-west-2
+  runtime: nodejs20.x
+  stage: prod
+functions:
+  api:
+    handler: dist/main.handler
+    memorySize: 2048
+    ephemeralStorageSize: 1024 # this is used for temp files storage
+    timeout: 300 # this function isn't bound to API Gateway, so we could allow larger timeouts
+    environment:
+      # @TODO: Normally this should be populated from CI/CD secrets, env variables or a KMS service
+      DB_CONNECTION_STRING: mongodb://mancommdataapi:WB4RaHVRmpMTeKK@mancomm-728682967665.us-west-2.docdb-elastic.amazonaws.com:27017/regulation?tls=true&retryWrites=false
+    vpc:
+      securityGroupIds:
+        - sg-a8c330cd
+      subnetIds:
+        - subnet-2aa0ac5e
+        - subnet-8e6e82eb

@@ -2,6 +2,7 @@ export class RegulationDocument {
     public id?: string;
     public title?: string;
     public subtitles?: Array<Subtitle>;
+    public source?: string;
 }
 
 export class Subtitle {

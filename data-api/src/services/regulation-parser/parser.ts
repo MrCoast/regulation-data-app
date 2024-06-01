@@ -11,7 +11,7 @@ export type PlainObject = {
 export default class Parser {
     constructor(
         private source: Source,
-        private normalyzerStrategy: NormalyzerStrategy
+        private normalyzerStrategy: NormalyzerStrategy,
     ) {}
 
     public parse(inputData: string) {
