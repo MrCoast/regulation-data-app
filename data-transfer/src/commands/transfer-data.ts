@@ -1,9 +1,10 @@
+import mongoose from 'mongoose';
 import { PutObjectRequest } from 'aws-sdk/clients/s3';
-import { RegulationDocument } from '../models/regulation-document';
 import { getS3KeyByUrl } from '../utils/utils';
 import S3Client from '../utils/s3Client';
 
 type TransferOptions = {
+    sourceCollectionName: string;
     limit: number;
     awsRegion: string;
     awsS3Bucket: string;
@@ -25,15 +26,13 @@ export default class TransferDocumentsCommand {
         await this.writeDocumentsToTarget(sourceDocuments);
     }
 
-    private async getSourceDocuments() {
+    private async getSourceDocuments(): Promise<LeanDocument[]> {
         const filter = {};
-        const projection = null;
-        const queryOptions = {
-            sort: { createdAt: 1 },
-            limit: this.options.limit,
-        };
 
-        return RegulationDocument.find(filter, projection, queryOptions).lean();
+        return mongoose.connection.db.collection(this.options.sourceCollectionName)
+            .find(filter).sort({ createdAt: 1 })
+            .limit(this.options.limit)
+            .toArray() as unknown as Promise<LeanDocument[]>;
     }
 
     private async writeDocumentsToTarget(sourceDocuments: LeanDocument[]) {
