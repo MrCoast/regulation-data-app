@@ -4,7 +4,7 @@ import TransferDocumentsCommand from './commands/transfer-data';
 const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
 const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
 const AWS_REGION = process.env.AWS_REGION;
-const AWS_S3_BUCKET = process.env.AWS_S3_BUCKET || 'regulation-documents';
+const AWS_S3_BUCKET = process.env.AWS_S3_BUCKET || 'mancomm-regulation-documents';
 
 const DB_CONNECTION_STRING = process.env.DB_CONNECTION_STRING || 'mongodb://root:toor@mongo:27017/regulation?authSource=admin';
 const DOCUMENTS_TRANSFER_LIMIT = Number(process.env.DOCUMENTS_TRANSFER_LIMIT || 5);
