@@ -8,7 +8,7 @@ services:
       - 11000:3000
     volumes:
       - ./data-api/:/app
-      - cache:/app/.cache
+      - data-api-cache:/app/.cache
     working_dir: /app
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -18,12 +18,24 @@ services:
     image: node:20-alpine
     volumes:
       - ./data-transfer/:/app
-      - cache:/app/.cache
+      - data-transfer-cache:/app/.cache
     working_dir: /app
     environment:
       NODE_ENV: development
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    command: sh -c 'yarn install && yarn start'
+
+  frontend:
+    image: node:20-alpine
+    ports:
+      - 11010:3000
+    volumes:
+      - ./frontend/:/app
+      - frontend-cache:/app/.cache
+    working_dir: /app
+    environment:
+      NODE_ENV: development
     command: sh -c 'yarn install && yarn start'
 
   mongo:
@@ -46,4 +58,6 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://root:toor@mongo:27017/
 
 volumes:
-  cache:
+  data-api-cache:
+  data-transfer-cache:
+  frontend-cache:
