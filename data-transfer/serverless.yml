@@ -9,7 +9,6 @@ functions:
   job:
     handler: dist/main.handler
     memorySize: 1024
-    ephemeralStorageSize: 1024 # this is used for temp files storage
     timeout: 300 # this function isn't bound to API Gateway, so we could allow larger timeouts
     events:
       - schedule:
@@ -23,6 +22,8 @@ functions:
       APP_AWS_REGION: ${env:AWS_REGION}
       AWS_S3_BUCKET: ${env:AWS_S3_BUCKET}
       DB_COLLECTION_NAME: ${env:DB_COLLECTION_NAME}
+      # Alternatively, the db host name / connection string might be taken as a CloudFormation resource output -
+      # if the db is declared as a custom CloudFormation resource, which is possible with the Serverless framework.
       DB_CONNECTION_STRING: ${env:DB_CONNECTION_STRING}
     vpc:
       securityGroupIds:
