@@ -11,6 +11,10 @@
   },
   "keywords": [],
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/icons-material": "^5.15.19",
+    "@mui/material": "^5.15.19",
     "aws-sdk": "^2.1632.0",
     "dotenv": "^16.4.5",
     "react": "^18.3.1",
@@ -18,6 +22,7 @@
     "react-scripts": "^5.0.1"
   },
   "devDependencies": {
+    "@types/material-ui": "^0.21.17",
     "@types/node": "^20.13.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
