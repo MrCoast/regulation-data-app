@@ -5,6 +5,8 @@ import * as RegulationDocumentTypes from '../../types/document';
 const ParagraphView = ({ paragraph }: { paragraph: RegulationDocumentTypes.Paragraph }): JSX.Element => {
   const { id, content, paragraphs } = paragraph;
 
+  // Nested paragraphs are stored as json strings in DocumentDB,
+  // see data-api src/models/regulation-document.ts -> paragraph schema.
   const mapInnerParagraph = (innerParagraph: string) => {
     const innerParagraphObject = JSON.parse(innerParagraph);
 
