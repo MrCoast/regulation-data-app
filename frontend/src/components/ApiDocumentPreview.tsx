@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 const ApiDocumentPreview = (): JSX.Element => (
   <div>
-    Document Preview from API
+    No document selected
   </div>
 );
 

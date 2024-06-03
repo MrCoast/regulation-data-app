@@ -1,4 +1,4 @@
-import { JSX, useEffect, useState } from 'react';
+import { JSX, useContext, useEffect, useState } from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -8,6 +8,7 @@ import Avatar from '@mui/material/Avatar';
 import FileOpen from '@mui/icons-material/FileOpen';
 import styled from '@emotion/styled';
 import { listDocuments, RegulationDocumentInfo } from '../utils/document';
+import { DocumentContext } from '../contexts/document';
 
 const StyledListItemButton = styled(ListItemButton)`
   border: 1px solid #ccc;
@@ -18,7 +19,7 @@ const StyledListItemButton = styled(ListItemButton)`
   justify-content: center;
 `;
 
-const renderListItems = (documents: RegulationDocumentInfo[]) => (
+const renderListItems = (documents: RegulationDocumentInfo[], handleDocumentClick) => (
   documents.map((document) => (
     <ListItem key={document.id}>
       <ListItemAvatar>
@@ -27,26 +28,29 @@ const renderListItems = (documents: RegulationDocumentInfo[]) => (
         </Avatar>
       </ListItemAvatar>
       <ListItemText primary={document.title} secondary={document.source} />
-      <StyledListItemButton>Preview from S3</StyledListItemButton>
-      <StyledListItemButton>Preview from API</StyledListItemButton>
+      <StyledListItemButton onClick={() => handleDocumentClick(document)}>
+        Preview from S3
+      </StyledListItemButton>
+      <StyledListItemButton onClick={() => handleDocumentClick(document)}>
+        Preview from API
+      </StyledListItemButton>
     </ListItem>
   ))
 )
 
 const DocumentsList = (): JSX.Element => {
   const [documents, setDocuments] = useState<RegulationDocumentInfo[]>([]);
+  const { handleDocumentClick } = useContext(DocumentContext);
 
   useEffect(() => {
-    const loadData = async () => {
+    (async () => {
       setDocuments(await listDocuments());
-    };
-
-    loadData();
+    })();
   }, []);
 
   return (
     <List>
-      {renderListItems(documents)}
+      {renderListItems(documents, handleDocumentClick)}
     </List>
   );
 };
