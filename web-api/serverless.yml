@@ -1,0 +1,23 @@
+org: victorkaralkin
+service: mancomm-web-api
+provider:
+  name: aws
+  region: us-west-2
+  runtime: nodejs20.x
+  stage: prod
+functions:
+  api:
+    handler: dist/main.handler
+    memorySize: 512
+    timeout: 10
+    events:
+      - http: ANY /
+      - http: ANY /{proxy+}
+    environment:
+      DB_CONNECTION_STRING: ${env:DB_CONNECTION_STRING}
+    vpc:
+      securityGroupIds:
+        - sg-a8c330cd
+      subnetIds:
+        - subnet-2aa0ac5e
+        - subnet-8e6e82eb

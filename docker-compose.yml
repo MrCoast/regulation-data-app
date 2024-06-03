@@ -26,6 +26,18 @@ services:
       - "host.docker.internal:host-gateway"
     command: sh -c 'yarn install && yarn start'
 
+  web-api:
+    image: node:20-alpine
+    ports:
+      - 11020:3000
+    volumes:
+      - ./web-api/:/app
+      - web-api-cache:/app/.cache
+    working_dir: /app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command: sh -c 'yarn install && yarn start'
+
   frontend:
     image: node:20-alpine
     ports:
@@ -60,4 +72,5 @@ services:
 volumes:
   data-api-cache:
   data-transfer-cache:
+  web-api-cache:
   frontend-cache:

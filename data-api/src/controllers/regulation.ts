@@ -5,19 +5,21 @@ import { RegulationDocument as RegulationDocumentModel } from '../models/regulat
 
 const router = express.Router();
 
+interface GetRegulationQuery {
+    sourceUrl?: string;
+}
+
+type DocumentOperationRequest = Request<unknown, unknown, unknown, GetRegulationQuery>;
+
 router.get('/', (req, res) => {
     res
         .status(200)
         .send('Welcome to Regulation controller!');
 });
 
-interface GetRegulationQuery {
-    sourceUrl: string;
-}
-
-router.get('/preload', async (req: Request<GetRegulationQuery>, res: Response) => {
+router.get('/preload', async (req: DocumentOperationRequest, res: Response) => {
     try {
-        const sourceUrl = req.query.sourceUrl as string;
+        const sourceUrl = req.query.sourceUrl;
 
         if (!sourceUrl) {
             res
@@ -50,7 +52,7 @@ router.get('/preload', async (req: Request<GetRegulationQuery>, res: Response) =
     }
 });
 
-router.get('/save', async (req: Request<GetRegulationQuery>, res: Response) => {
+router.get('/save', async (req: DocumentOperationRequest, res: Response) => {
     try {
         const sourceUrl = req.query.sourceUrl as string;
 

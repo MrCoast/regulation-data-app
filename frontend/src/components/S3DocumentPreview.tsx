@@ -24,11 +24,9 @@ const S3DocumentPreview = (): JSX.Element => {
     );
   }
 
-  return (
-    <>
-      <RegulationDocumentView document={document} />
-    </>
-  );
+  console.log(document);
+
+  return <RegulationDocumentView document={document} />;
 };
 
 export default S3DocumentPreview;
