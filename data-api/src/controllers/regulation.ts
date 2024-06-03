@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import * as regulationService from '../services/regulation';
 import * as regulationDocumentMapper from '../mappers/regulation-document';
+import { RegulationDocument as RegulationDocumentModel } from '../models/regulation-document';
 
 const router = express.Router();
 
@@ -64,11 +65,14 @@ router.get('/save', async (req: Request<GetRegulationQuery>, res: Response) => {
             return;
         }
 
-        const regulationDocument = await regulationService.getCachedRegulationDocument(sourceUrl);
-        regulationDocument.source = sourceUrl;
+        const regulationDocumentDto = await regulationService.getCachedRegulationDocument(sourceUrl);
+        regulationDocumentDto.source = sourceUrl;
 
-        const regulationDocumentModel = regulationDocumentMapper.createModelFromDto(regulationDocument);
-        await regulationDocumentModel.save();
+        const regulationDocument = regulationDocumentMapper.createModelFromDto(regulationDocumentDto);
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+        const { _id, ...documentChangeSet } = (regulationDocument as any)._doc;
+        await RegulationDocumentModel.findOneAndUpdate({ source: sourceUrl }, documentChangeSet, { upsert: true });
 
         res
             .status(200)

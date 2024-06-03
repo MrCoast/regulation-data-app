@@ -150,6 +150,7 @@ const regulationDocument = new Schema({
     source: {
         type: String,
         required: true,
+        unique: true,
     },
     createdAt: {
         type: Date,
