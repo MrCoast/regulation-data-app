@@ -1,5 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import cors from 'cors';
 import serverless from 'serverless-http';
 import apiController from './controllers/api';
 
@@ -9,6 +10,7 @@ const DB_CONNECTION_STRING = process.env.DB_CONNECTION_STRING || 'mongodb://root
 const app = express();
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+app.use(cors());
 
 app.get('/', (req, res) => res.send('OK'));
 app.use('/api', apiController);

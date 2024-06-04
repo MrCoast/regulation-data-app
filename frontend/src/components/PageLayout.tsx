@@ -7,7 +7,7 @@ import { DocumentProvider } from '../contexts/document';
 
 const LayoutWrapper = styled.div`
   margin-left: 20px;
-  max-width: 1200px;
+  max-width: 1000px;
 
   .darker-heading {
     color: #a6a6a6;
@@ -25,7 +25,7 @@ const PageLayout = (): JSX.Element => (
       <h3 className='darker-heading'>Preview Document from S3</h3>
       <S3DocumentPreview />
 
-      <h3 className='darker-heading'>Preview Document from API</h3>
+      <h3 className='darker-heading'>Preview Document from API (Lazy Partial Load)</h3>
       <ApiDocumentPreview />
     </DocumentProvider>
   </LayoutWrapper>

@@ -13,12 +13,13 @@ export async function listDocuments(): Promise<RegulationDocumentInfo[]> {
         title: 'Title 49 :: Transportation 123',
         source: 'https://www.ecfr.gov/api/renderer/v1/content/enhanced/2024-03-01/title-49',
       },
-      // {
-      //   id: 'title-50',
-      //   title: 'Title 50 :: Wildlife and Fisheries',
-      //   source: 'https://www.ecfr.gov/api/renderer/v1/content/enhanced/2024-03-01/title-50',
-      // },
     ];
+}
+
+function getS3KeyByDocumentSource(documentSource: string) {
+  const sanitizedUrl = documentSource.split(/[^\w-]/).filter(Boolean).join('_').slice(0, 20);
+
+  return btoa(sanitizedUrl);
 }
 
 export async function loadDocumentFromS3(documentSource: string): Promise<RegulationDocument> {
@@ -39,12 +40,22 @@ export async function loadDocumentFromS3(documentSource: string): Promise<Regula
   return null;
 }
 
-export async function loadDocumentFromApi(documentSource: string) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function loadDocumentFromApi(documentId: string, fieldPath?: any) {
+  const fieldPathString = fieldPath ? JSON.stringify(fieldPath) : '';
+  const apiUrl = `http://localhost:11020/api/document/${documentId}`;
+  const params = new URLSearchParams({
+    fieldPath: fieldPathString,
+  });
 
-}
+  try {
+    const apiResponse = await fetch(`${apiUrl}?${params.toString()}`);
+    const content = await apiResponse.json();
 
-function getS3KeyByDocumentSource(documentSource: string) {
-  const sanitizedUrl = documentSource.split(/[^\w-]/).filter(Boolean).join('_').slice(0, 20);
+    return content.data;
+  } catch (e) {
+    console.error(`API: Error loading document: id = "${documentId}", fieldPath = ${fieldPathString}`);
+  }
 
-  return btoa(sanitizedUrl);
+  return null;
 }

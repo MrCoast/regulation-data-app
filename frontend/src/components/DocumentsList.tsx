@@ -29,10 +29,7 @@ const renderListItems = (documents: RegulationDocumentInfo[], handleDocumentClic
       </ListItemAvatar>
       <ListItemText primary={document.title} secondary={document.source} />
       <StyledListItemButton onClick={() => handleDocumentClick(document)}>
-        Preview from S3
-      </StyledListItemButton>
-      <StyledListItemButton onClick={() => handleDocumentClick(document)}>
-        Preview from API
+        Preview Document
       </StyledListItemButton>
     </ListItem>
   ))

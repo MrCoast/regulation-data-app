@@ -24,8 +24,6 @@ const S3DocumentPreview = (): JSX.Element => {
     );
   }
 
-  console.log(document);
-
   return <RegulationDocumentView document={document} />;
 };
 

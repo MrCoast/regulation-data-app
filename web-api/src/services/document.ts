@@ -71,7 +71,7 @@ function buildAggregationFromFieldPath(documentId: string, fieldPath: string) {
 }
 
 /**
- * Leave only 2 nesting levels.
+ * Leave only 3 nesting levels.
  * This also could be done on Mongo aggregation level, but tried to avoid overcomplication of aggregations.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -83,7 +83,13 @@ function filterNestedFields(documentData: any) {
             for (const collectionItem of filteredDocumentData[fieldKey]) {
                 for (const collectionItemFieldKey of Object.keys(collectionItem)) {
                     if (Array.isArray(collectionItem[collectionItemFieldKey])) {
-                        collectionItem[collectionItemFieldKey] = [];
+                        for (const collectionItemSubItem of collectionItem[collectionItemFieldKey]) {
+                            for (const collectionSubItemFieldKey of Object.keys(collectionItemSubItem)) {
+                                if (Array.isArray(collectionItemSubItem[collectionSubItemFieldKey])) {
+                                    collectionItemSubItem[collectionSubItemFieldKey] = [];
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -94,10 +100,14 @@ function filterNestedFields(documentData: any) {
 }
 
 export async function getDocumentData(documentId: string, fieldPath?: string) {
-    if (!fieldPath) {
-        return mongoose.connection.db
+    if (!fieldPath || fieldPath === 'undefined') {
+        const documentData = await mongoose.connection.db
             .collection('regulationdocuments')
             .findOne({ id: documentId });
+
+        return documentData
+            ? filterNestedFields(documentData)
+            : null;
     }
 
     const aggregationPipeline = buildAggregationFromFieldPath(documentId, fieldPath);

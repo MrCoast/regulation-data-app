@@ -26,14 +26,25 @@ router.get('/document/:id', async (req: DocumentRequest, res: Response) => {
     const id = req.params.id;
     const fieldPath = req.query.fieldPath;
 
-    const documentData = await documentService.getDocumentData(id, fieldPath);
+    try {
+        const documentData = await documentService.getDocumentData(id, fieldPath);
 
-    res
-        .status(200)
-        .json({
-            status: 'ok',
-            data: documentData,
-        });
+        res
+            .status(200)
+            .json({
+                status: 'ok',
+                data: documentData,
+            });
+    } catch (e) {
+        console.error(e);
+
+        res
+            .status(500)
+            .json({
+                status: 'error',
+                error: e,
+            });
+    }
 });
 
 export default router;
