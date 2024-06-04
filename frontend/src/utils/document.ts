@@ -7,13 +7,15 @@ export type RegulationDocumentInfo = {
 };
 
 export async function listDocuments(): Promise<RegulationDocumentInfo[]> {
-    return [
-      {
-        id: 'title-49',
-        title: 'Title 49 :: Transportation 123',
-        source: 'https://www.ecfr.gov/api/renderer/v1/content/enhanced/2024-03-01/title-49',
-      },
-    ];
+  // Normally this should come from web-api GET /documents endpoint,
+  // which is a trivial list endpoint - so just saving some time here
+  return [
+    {
+      id: 'title-49',
+      title: 'Title 49 :: Transportation 123',
+      source: 'https://www.ecfr.gov/api/renderer/v1/content/enhanced/2024-03-01/title-49',
+    },
+  ];
 }
 
 function getS3KeyByDocumentSource(documentSource: string) {
@@ -42,8 +44,9 @@ export async function loadDocumentFromS3(documentSource: string): Promise<Regula
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function loadDocumentFromApi(documentId: string, fieldPath?: any) {
+  const apiBaseUrl = 'http://localhost:11020';
   const fieldPathString = fieldPath ? JSON.stringify(fieldPath) : '';
-  const apiUrl = `http://localhost:11020/api/document/${documentId}`;
+  const apiUrl = `${apiBaseUrl}/api/document/${documentId}`;
   const params = new URLSearchParams({
     fieldPath: fieldPathString,
   });

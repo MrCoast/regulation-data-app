@@ -15,6 +15,7 @@ functions:
       - http: ANY /{proxy+}
     environment:
       DB_CONNECTION_STRING: ${env:DB_CONNECTION_STRING}
+      DB_COLLECTION_NAME: ${env:DB_COLLECTION_NAME}
     vpc:
       securityGroupIds:
         - sg-a8c330cd
