@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import mongoose from 'mongoose';
 
+const DB_COLLECTION_NAME = process.env.DB_COLLECTION_NAME || 'regulationdocuments';
+
 function buildAggregationFromFieldPath(documentId: string, fieldPath: string) {
     const pipeline = [];
 
@@ -15,20 +17,6 @@ function buildAggregationFromFieldPath(documentId: string, fieldPath: string) {
     if (!Array.isArray(pathComponents)) {
         throw new Error('fieldPath is incorrect');
     }
-    // const pathComponents = [
-    //     {
-    //         field: 'subtitles',
-    //         id: 'subtitle-A',
-    //     },
-    //     {
-    //         field: 'parts',
-    //         id: 'part-1',
-    //     },
-    //     {
-    //         field: 'subparts',
-    //         id: 'subpart-A',
-    //     },
-    // ];
 
     let level = 0;
 
@@ -102,7 +90,7 @@ function filterNestedFields(documentData: any) {
 export async function getDocumentData(documentId: string, fieldPath?: string) {
     if (!fieldPath || fieldPath === 'undefined') {
         const documentData = await mongoose.connection.db
-            .collection('regulationdocuments')
+            .collection(DB_COLLECTION_NAME)
             .findOne({ id: documentId });
 
         return documentData
@@ -114,7 +102,7 @@ export async function getDocumentData(documentId: string, fieldPath?: string) {
     console.log(JSON.stringify(aggregationPipeline));
 
     const result = await mongoose.connection.db
-        .collection('regulationdocuments')
+        .collection(DB_COLLECTION_NAME)
         .aggregate(aggregationPipeline)
         .toArray();
 

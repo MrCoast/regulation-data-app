@@ -9,12 +9,6 @@ router.get('/', async (req, res) => {
         .send('Welcome to API controller!');
 });
 
-router.get('/documents', async (req, res) => {
-    res
-        .status(200)
-        .send('Welcome to API controller!');
-});
-
 type DocumentRequest = Request<
     { id: string },
     unknown,
