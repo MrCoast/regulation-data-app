@@ -3,7 +3,7 @@ import { DocumentContext, DocumentContextValue } from '../contexts/document';
 import { RegulationDocumentInfo, loadDocumentFromApi } from '../utils/document';
 import RegulationDocumentView from './document/regulation-document';
 import { RegulationDocument } from '../types/document';
-import LazyPartialLoadDecorator from '../decorators/lazy-partial-load';
+import LazyPartialLoadDecorator from '../decorators/LazyPartialLoadDecorator';
 
 const ApiDocumentPreview = (): JSX.Element => {
   const { selectedDocument: selectedDocumentInfo } = useContext<DocumentContextValue<RegulationDocumentInfo>>(DocumentContext);

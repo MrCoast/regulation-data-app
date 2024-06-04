@@ -27,7 +27,8 @@ function getS3KeyByDocumentSource(documentSource: string) {
 export async function loadDocumentFromS3(documentSource: string): Promise<RegulationDocument> {
   // Alternatively, signed temporary S3 URLs might be used, that involves a back end endpoint implementation with aws-sdk.
   // Here the direct s3 URLs are used to save development time.
-  const s3Url = `https://mancomm-regulation-documents.s3.us-west-2.amazonaws.com/${getS3KeyByDocumentSource(documentSource)}`;
+  const s3BaseUrl = process.env.REACT_APP_S3_BASE_URL || 'https://mancomm-regulation-documents.s3.us-west-2.amazonaws.com';
+  const s3Url = `${s3BaseUrl}/${getS3KeyByDocumentSource(documentSource)}`;
   console.log(`S3: Loading documentSource = "${documentSource}", s3Url = ${s3Url}`);
 
   try {
@@ -44,7 +45,7 @@ export async function loadDocumentFromS3(documentSource: string): Promise<Regula
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function loadDocumentFromApi(documentId: string, fieldPath?: any) {
-  const apiBaseUrl = 'http://localhost:11020';
+  const apiBaseUrl = process.env.REACT_APP_WEB_API_BASE_URL || 'http://localhost:11020';
   const fieldPathString = fieldPath ? JSON.stringify(fieldPath) : '';
   const apiUrl = `${apiBaseUrl}/api/document/${documentId}`;
   const params = new URLSearchParams({

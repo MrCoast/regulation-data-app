@@ -52,18 +52,8 @@ docker run --rm -it \
 docker compose up frontend web-api mongo mongo-express
 ```
 
-## Build
-```
-docker build ./frontend -t frontend-deployer:latest
-```
-
 ## Deploy to AWS Cloud
-```
-docker run --rm -it \
-    -e AWS_S3_URL=<value> \
-    -e WEB_API_BASE_URL=<value> \
-    frontend-deployer:latest
-```
+Amplify is used for AWS deployment.
 
 # Web API
 

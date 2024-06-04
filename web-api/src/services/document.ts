@@ -88,6 +88,8 @@ function filterNestedFields(documentData: any) {
 }
 
 export async function getDocumentData(documentId: string, fieldPath?: string) {
+    await ensureMongooseConnection();
+
     if (!fieldPath || fieldPath === 'undefined') {
         const documentData = await mongoose.connection.db
             .collection(DB_COLLECTION_NAME)
@@ -109,4 +111,22 @@ export async function getDocumentData(documentId: string, fieldPath?: string) {
     return result[0] && result[0].desiredField
         ? filterNestedFields(result[0].desiredField)
         : null;
+}
+
+// This could be set as an Express middleware, but didn't work that way for some reason.
+// Needs some deeper digging. It works right here for now.
+async function ensureMongooseConnection() {
+    console.info('getDocumentData - Checking for Mongoose connection');
+
+    let attempts = 0;
+    while (!mongoose.connection.db) {
+        await new Promise((resolve) => setTimeout(() => resolve(null), 1000));
+
+        attempts++;
+        console.warn(`Waiting for Mongoose connection, attempts = ${attempts}`);
+
+        if (attempts > 30) {
+            break;
+        }
+    }
 }
